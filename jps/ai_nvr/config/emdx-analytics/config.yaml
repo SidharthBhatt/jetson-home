@@ -1,0 +1,156 @@
+server:
+  port: 6000
+  host: 0.0.0.0
+  use_reloader: false
+  instance_id: ${oc.env:INSTANCE_ID}
+sqlite:
+  location: /data/emdx-volume
+  fileName: emdx_analytics.db
+metrics:
+  enabled: true
+  messages_processed: true
+  memory_used: false
+streaming:
+  publisher:
+    backend: redis
+  ingestor:
+    backend: redis
+  sensorSpecificStream: false
+redis:
+  host: localhost
+  port: 6379
+  timeseries:
+    fov:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - avg
+          - min
+          - max
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000
+    tripwire:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000 
+    roi:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - avg
+          - min
+          - max
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000
+  streams:
+    rawMessages:
+      name: "test"
+      consumerGroup: "cg-its-new"
+      read_count: 4
+      read_block_ms: 20
+      sensorSpecificStream: false
+    config:
+      name: emdx_config
+      consumerGroup: "cg_emdx_config"
+      sensorSpecificStream: false
+    alertRules:
+      name: emdx_alert_rule
+      consumerGroup: "cg_emdx_alert_rule"
+      sensorSpecificStream: false
+    alerts:
+      name: emdx_alert_events
+      maxLen: 100
+    events:
+      name: emdx_gaze_n_lip
+      maxLen: 1000
+    trajectory:
+      name: emdx_trajectory
+      maxLen: 1000
+    cameraStatus:
+      name: vst_events
+      enabled: 0
+      sensorSpecificStream: false
+webapi:
+  endpoint: "http://localhost:5000"
+sensors: []
+plugins: []
+filters:
+  sensors:
+    filter_unrecognized: 1   
+  state_management:
+    object_type_analytics: true
+    class_target:
+    - "*"  
+    sensor:
+      max_idle_time_sec: 60
+    trajectory:
+      in_memory_state_limit_length: 3000
+      max_idle_time_sec: 3
+      deactivation_time_sec: 0.5
+      min_length: 5
+      moving_avg_length: 5
+      fetch_historical_trajectory_duration_sec: 60
+      publish_enabled: true
+    gaze:
+      enable: 0
+    lip_activity:
+      enable: 0
+  fov:
+    result_retension_window_sec: 60
+    result_retension_window_max_size: 3600
+  tripwire:
+    latency_reporting_enabled: false      
+    result_retension_window_sec: 60
+    frame_buffer: 5
+    pixel_buffer: 15
+    in_out_algo:
+      enable: true
+      time_threshold_ms: 2000
+      confidence_threshold: 0.7
+      prediction_frame_sliding_window: 15
+      prediction_vector_length_threshold: 3
+  roi:
+    latency_reporting_enabled: false      
+    result_retension_window_sec: 60
+    frame_buffer: 5
+    pixel_buffer: 15
+    frame_buffer_2: 50
+  gaze:
+    frame_buffer: 5
+  lip_activity:
+    frame_buffer: 0
+llm4data_integration:
+  enabled: false
+  world_ctx_endpoint: http://localhost:5001/api/world_context

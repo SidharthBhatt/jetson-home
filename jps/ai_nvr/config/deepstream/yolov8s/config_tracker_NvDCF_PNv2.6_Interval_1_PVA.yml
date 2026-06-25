@@ -1,0 +1,65 @@
+%YAML:1.0
+
+BaseConfig:
+  minDetectorConfidence: 0.09187384242556555
+TargetManagement:
+  enableBboxUnClipping: 1
+  preserveStreamUpdateOrder: 0
+  maxTargetsPerStream: 30
+  minIouDiff4NewTarget: 0.9105744982967992
+  minTrackerConfidence: 0.23230479013367128
+  probationAge: 4
+  maxShadowTrackingAge: 74
+  earlyTerminationAge: 1
+TrajectoryManagement:
+  useUniqueID: 0
+  enableReAssoc: 0
+  minMatchingScore4Overall: 0.3882981318738414
+  minTrackletMatchingScore: 0.4844701795161939
+  minMatchingScore4ReidSimilarity: 0.055728729905389844
+  matchingScoreWeight4TrackletSimilarity: 0.03119551297572662
+  matchingScoreWeight4ReidSimilarity: 0.3771247090072431
+  minTrajectoryLength4Projection: 8
+  prepLength4TrajectoryProjection: 58
+  trajectoryProjectionLength: 139
+  maxAngle4TrackletMatching: 82
+  minSpeedSimilarity4TrackletMatching: 0.09167954005055699
+  minBboxSizeSimilarity4TrackletMatching: 0.026812945974225292
+  maxTrackletMatchingTimeSearchRange: 14
+  trajectoryProjectionProcessNoiseScale: 0.0100
+  trajectoryProjectionMeasurementNoiseScale: 100
+  trackletSpacialSearchRegionScale: 0.2598
+  reidExtractionInterval: 30 #12
+DataAssociator:
+  dataAssociatorType: 0
+  associationMatcherType: 1
+  checkClassMatch: 1
+  minMatchingScore4Overall: 0.3621643998530099
+  minMatchingScore4SizeSimilarity: 0.3339586193983177
+  minMatchingScore4Iou: 0.46985574931547147
+  minMatchingScore4VisualSimilarity: 0.5295411786196589
+  matchingScoreWeight4VisualSimilarity: 0.7072454950363342
+  matchingScoreWeight4SizeSimilarity: 0.04171017994862661
+  matchingScoreWeight4Iou: 0.7828006633200818
+  tentativeDetectorConfidence: 0.09878976795239156
+  minMatchingScore4TentativeIou: 0.3032999285735689
+StateEstimator:
+  stateEstimatorType: 1
+  processNoiseVar4Loc: 5938.990197170362
+  processNoiseVar4Size: 5070.591769379401
+  processNoiseVar4Vel: 23.88844078728569
+  measurementNoiseVar4Detector: 100.0000010592337
+  measurementNoiseVar4Tracker: 6031.948608343923
+VisualTracker:
+  visualTrackerType: 2
+  useColorNames: 1
+  useHog: 1
+  featureImgSizeLevel: 3
+  featureFocusOffsetFactor_y: -0.2000
+  filterLr: 0.0750
+  filterChannelWeightsLr: 0.1000
+  gaussianSigma: 0.7500
+
+  #[NvDCF_VPI]
+  vpiBackend4CropnScale: 1 # the type of compute backend among {CUDA=1, PVA=2}
+  vpiBackend4DcfTracker: 2 # the type of compute backend among {CUDA=1, PVA=2}

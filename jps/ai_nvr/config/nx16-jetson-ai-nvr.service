@@ -1,0 +1,14 @@
+[Unit]
+Description=AI NVR Service
+Wants=docker.service
+After=docker.service
+After=jetson-storage.service
+
+[Service]
+Type=oneshot
+ExecStart=docker compose -f /opt/nvidia/jetson/apps/ai_nvr/compose_nx16.yaml up -d --force-recreate
+RemainAfterExit=yes
+ExecStop=docker compose -f /opt/nvidia/jetson/apps/ai_nvr/compose_nx16.yaml down --remove-orphans
+
+[Install]
+WantedBy=default.target

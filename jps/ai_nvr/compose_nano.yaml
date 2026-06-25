@@ -1,0 +1,172 @@
+include:
+  - base_compose.yaml
+services:
+  deepstream:
+    image: nvcr.io/nvidia/jps/deepstream:7.1-public-v1
+    user: "2006:150"
+    network_mode: "host"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    container_name: deepstream
+    runtime: nvidia
+    volumes:
+      - ./config/deepstream:/ds-config-files
+      - /tmp/.X11-unix/:/tmp/.X11-unix
+      - /data/logging-volume:/log
+      - /tmp:/tmp
+    depends_on:
+      moj-init-ds:            
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 5600M
+      restart_policy:
+        condition: always
+    command: sh -c '/opt/nvidia/deepstream/deepstream/service-maker/sources/apps/cpp/deepstream_test5_app/build/deepstream-test5-app -s /ds-config-files/pn26/service-maker/source-list_nano.yaml -c /ds-config-files/pn26/service-maker/ds-config_nano.yaml -l /ds-config-files/pn26/labels.txt --perf-measurement-interval-sec 5 2>&1 | grep --line-buffered . | tee -a /log/deepstream.log'
+
+  sdr:
+    image: nvcr.io/nvidia/jps/sdr:2.2-8-14-v1
+    user: "2001:150"
+    network_mode: "host"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    container_name: sdr
+    volumes:
+      - ./config/sdr:/wdm-configs
+      - /data/emdx-volume:/wdm-data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/logging-volume:/log
+    environment:
+      PORT: 4001
+      WDM_WL_SPEC: /wdm-data/ds-data_wl.yaml
+      WDM_CLUSTER_CONFIG_FILE: /wdm-configs/docker_cluster_config_single_pipeline.json
+      WDM_MSG_KEY: vst.event.modified
+      WDM_WL_REDIS_MSG_FIELD: metadata
+      WDM_WL_ADD_URL: /api/v1/stream/add
+      WDM_WL_DELETE_URL: /api/v1/stream/remove
+      WDM_WL_HEALTH_CHECK_URL: /api/v1/stream/add
+      WDM_WL_CHANGE_ID_ADD: camera_streaming
+      WDM_PRELOAD_WORKLOAD: ./tests/event_pre-roll.json
+      WDM_CLEAR_DATA_WL: true
+      WDM_KFK_ENABLE: false
+      WDM_DS_SWAP_ID_NAME: true
+      WDM_VALIDATE_BEFORE_ADD: true
+      WDM_PRELOAD_DELAY_FOR_DS_API: true
+      WDM_WL_THRESHOLD: 4
+      WDM_CLUSTER_TYPE: docker
+      WDM_POD_WATCH_DOCKER_DELAY: 0.5
+      WDM_DS_STATUS_CHECK: true
+      WDM_RESTART_DS_ON_ADD_FAIL: false
+      WDM_DISABLE_WERKZEUG_LOGGING: true
+      WDM_WL_OBJECT_NAME: sdr-deepstream
+      WDM_CONSUMER_GRP_ID: sdr-deepstream-cg
+      WDM_CLUSTER_CONTAINER_NAMES: '["deepstream", "vst"]'
+      VST_STREAMS_ENDPOINT: http://localhost:30000/api/v1/live/streams
+      VST_STATUS_ENDPOINT: http://localhost:30000/api/v1/sensor/status
+    depends_on:
+      moj-http-based-init-sdr:            
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+      restart_policy:
+        condition: always
+    entrypoint: []
+    command: sh -c '/wdm/dist/sdr 2>&1 | tee -a /log/sdr-deepstream.log'
+
+  sdr-reprovision-controller:
+    image: nvcr.io/nvidia/jps/sdr-reprovision-controller:2.2-8-14-v1
+    user: "2001:150"
+    network_mode: "host"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"    
+    volumes:
+      - ./config/sdr:/opt/config
+    environment:
+      VST_ENDPOINT: "http://localhost:30000/api/v1/live/streams"
+      REDIS_IP: "localhost"
+      REDIS_PORT: 6379
+      REDIS_CHANNEL: "vst.event"
+      SDR_PORT: 4001
+      SDR_CLUSTER_CONFIG_FILE: "/opt/config/docker_cluster_config_single_pipeline.json"
+      WL_CHANGE_ID_ADD: "camera_streaming"
+      WL_CHANGE_ID_DEL: "camera_remove"
+      SWAP_ID_NAME_VST: true
+      ENABLE_VST_RECONCILE: true
+    container_name: sdr-reprovision-controller
+    depends_on:
+      moj-http-based-init-sdr-reprovision-controller:            
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+      restart_policy:
+        condition: always
+
+  sdr-alertmanager-controller:
+    image: nvcr.io/nvidia/jps/sdr-alertmanager-controller:2.3.1
+    user: "2001:150"
+    network_mode: "host"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"    
+    volumes:
+      - ./config/sdr:/root/its_monitoring/config
+    environment:
+      VST_ENDPOINT: "http://localhost:30000/api/v1/live/streams"
+      REDIS_IP: "localhost"
+      REDIS_PORT: 6379
+      REDIS_CHANNEL: "vst.event.modified"
+      SDR_PORT: 4001
+      SEND_ADDITIONAL_ALERT_THRESHOLD: 0
+    container_name: sdr-alertmanager-controller
+    depends_on:
+      moj-http-based-init-sdr-reprovision-controller:            
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+      restart_policy:
+        condition: always
+
+  sdr-proxy-controller:
+    image: nvcr.io/nvidia/jps/sdr-proxy-controller:2.2-8-14-v1
+    user: "2001:150"
+    network_mode: "host"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"    
+    volumes:
+      - ./config/sdr:/root/its_monitoring/config
+    environment:
+      ENABLE_IPC_SUPPORT: true
+      REDIS_IP: "localhost"
+      REDIS_PORT: 6379
+      SDR_PORT: 4001
+    container_name: sdr-proxy-controller
+    depends_on:
+      moj-http-based-init-sdr-reprovision-controller:            
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+      restart_policy:
+        condition: always

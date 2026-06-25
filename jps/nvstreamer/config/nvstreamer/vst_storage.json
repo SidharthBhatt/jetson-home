@@ -1,0 +1,5 @@
+{
+    "data_path": "/opt/store/nvstreamer_data/",
+    "video_path": "/opt/store/nvstreamer_videos/",
+    "total_video_storage_size_MB": 1000
+}

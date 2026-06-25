@@ -1,0 +1,110 @@
+################################################################################
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+################################################################################
+
+deepstream:
+  nodes:
+  - type: nvinfer
+    # name of the primary inference must be 'pgie' for test app to route streams here
+    name: pgie
+    properties:
+      config-file-path: "/ds-config-files/pn26/config_infer_primary_RN34_PN26_960x544_dla0_orin_unprune_nx.txt"
+      model-engine-file: "/pn26-files/dla0_pn26_jp6_halfmem_bs4.engine"
+      unique-id: 1
+      # be sure to rename model-engine-file whenever batch-size is changed
+      batch-size: 4
+  - type: nvtracker
+    name: tracker
+    properties:
+      ll-config-file: "/ds-config-files/pn26/config_tracker_NvDCF_PNv2.6_Interval_1_PVA.yml;/ds-config-files/pn26/config_tracker_NvDCF_PNv2.6_Interval_1_PVA.yml"
+      ll-lib-file: "/opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so"
+      sub-batches: "2:2"
+      tracker-width: 960
+      tracker-height: 544
+  - type: nvmsgconv
+    name: msgconv
+    properties:
+      payload-type: 1
+  - type: nvmsgbroker
+    name: msgbroker
+    properties:
+      config: "/ds-config-files/pn26/cfg_redis.txt"
+      proto-lib: "/opt/nvidia/deepstream/deepstream/lib/libnvds_redis_proto.so"
+      conn-str: "localhost;6379;test"
+      topic: "test"
+      sync: false
+      async: false
+  - type: queue
+    name: checkpoint
+  - type: identity
+    name: tiler
+    properties:
+      width: 1280
+      height: 720
+  - type: identity
+    name: osd
+  - type: identity
+    name: converter
+  - type: tee
+    name: tee
+  - type: queue
+    name: queue1
+  - type: queue
+    name: queue2
+  - type: fakesink
+    name: sink
+    properties:
+      async: false
+      sync: false
+  - type: sample_video_probe.sample_video_probe
+    name: osd_counter
+    properties:
+      font-size: 15
+  - type: queue
+    name: queue_tracker
+  - type: queue
+    name: queue_checkpoint
+  - type: queue
+    name: queue_tiler
+  - type: queue
+    name: queue_converter
+  - type: queue
+    name: queue_osd
+  - type: queue
+    name: queue_tee
+  edges:
+    pgie: [queue_tracker, osd_counter]
+    queue_tracker: tracker
+    tracker: queue_checkpoint
+    queue_checkpoint: checkpoint
+    checkpoint: queue_tiler
+    queue_tiler: tiler
+    tiler: queue_converter
+    queue_converter: converter
+    converter: queue_osd
+    queue_osd: osd
+    osd: queue_tee
+    queue_tee: tee
+    tee: [queue1, queue2]
+    queue1: sink
+    queue2: msgconv
+    msgconv: msgbroker

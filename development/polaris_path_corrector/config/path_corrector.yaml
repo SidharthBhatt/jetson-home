@@ -1,0 +1,46 @@
+path_corrector_node:
+  ros__parameters:
+    input_path_topic: "/input_path"
+    scan_topic: "/scan"
+    odom_topic: "/odom"
+    corrected_path_topic: "/corrected_path"
+    safe_speed_topic: "/safe_speed"
+    obstacle_state_topic: "/obstacle_state"
+    marker_topic: "/path_corrector/markers"
+
+    lookahead_distance: 3.0
+    obstacle_front_min_x: 0.10
+    obstacle_front_max_x: 1.0
+    obstacle_half_width: 0.35
+    max_side_search: 1.20
+    avoidance_offset: 0.40
+    safety_clearance: 0.35
+
+    nominal_speed: 0.18
+    slow_speed: 0.10
+    stop_speed: 0.0
+
+pure_pursuit_controller_node:
+  ros__parameters:
+    corrected_path_topic: "/corrected_path"
+    safe_speed_topic: "/safe_speed"
+    odom_topic: "/odom"
+    cmd_vel_topic: "/cmd_vel_path_corrector"
+    lookahead_distance: 0.55
+    max_linear_speed: 0.20
+    max_angular_speed: 0.80
+    goal_tolerance: 0.20
+
+nav2_goal_to_path_node:
+  ros__parameters:
+    goal_topic: "/goal_pose"
+    output_path_topic: "/input_path"
+    planner_action_name: "/compute_path_to_pose"
+    planner_id: ""
+    use_start: false
+
+event_logger_node:
+  ros__parameters:
+    obstacle_state_topic: "/obstacle_state"
+    safe_speed_topic: "/safe_speed"
+    log_path: "/tmp/path_corrector_events.csv"

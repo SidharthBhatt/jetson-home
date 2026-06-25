@@ -1,0 +1,10 @@
+{
+    "moj-emdx-01": {
+      "provisioning_address": "localhost:6001",
+      "process_type": "docker"
+    },
+    "moj-emdx-02": {
+      "provisioning_address": "localhost:6002",
+      "process_type": "docker"
+    }
+}

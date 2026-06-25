@@ -1,0 +1,173 @@
+sqlite:
+  location: "/data/emdx-volume"
+  fileName: emdx_config.db
+  soft_heap_limit_bytes: 134217728
+  alerts:
+    fileName: emdx_data.db
+  metadata:
+    fileName: emdx_metadata.db
+  trajectory:
+    fileName: emdx_trajectory.db
+  ageingJob:
+    name: webapi_ageing_job
+    cron:
+      unit: "hour"
+      value: "*/1"
+
+filesystem:
+    location: "/data/emdx-volume"
+
+publisher:
+    redis
+
+sensorSpecificStream: false
+
+datastorage:
+  backend: sqlite
+  alertRules:
+    retention_max_records: 10
+  alerts:
+    retention_msecs: 15552000000
+    save: true
+  config:
+    retention_max_records: 10
+  events:
+    retention_msecs: 2678400000
+    save: true
+
+metadatastorage:
+  backend: filesystem
+  trajectory:
+      save: true
+      retention_msecs: 604800000
+      retention_max_len: 9000
+      merge_trajectory: False
+  metadata:
+      save: true
+      retention_msecs: 604800000
+  ageingJob:
+      name: webapi_ageing_job
+      cron:
+          unit: hour
+          value: '*/1'  
+redis:
+  timeseries:
+    fov:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - avg
+          - min
+          - max
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000
+    tripwire:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000 
+    roi:
+      tableGranularities:
+      - value: 1
+        unit: sec
+        retention_msecs: 2678400000
+        aggregations:
+          - avg
+          - min
+          - max
+          - sum
+      - value: 15
+        unit: sec
+        retention_msecs: 8035200000
+      - value: 1
+        unit: min
+        retention_msecs: 16070400000
+      - value: 15
+        unit: min
+        retention_msecs: 32140800000
+  streams:
+    config:
+        name: "emdx_config"
+        maxlen: 20
+    alertRules:
+        name: "emdx_alert_rule"
+        maxlen: 20
+    alerts:
+        name: "emdx_alert_events"
+        websocketConsumerGroup: "cg-emdx-alerts-ws"
+        consumerGroup: "cg-emdx-alert-events"
+        read_count: 1
+        read_block_ms: 50
+        sensorSpecificStream: false
+    metadata:
+        name: "test"
+        consumerGroup: "cg-emdx-metadata"
+        read_count: 25
+        read_block_ms: 150
+        sensorSpecificStream: false
+    trajectory:
+        name: "emdx_trajectory"
+        consumerGroup: "cg-emdx-trajectory"
+        read_count: 10
+        read_block_ms: 150
+        sensorSpecificStream: false
+    events:
+        name: "emdx_lip_n_gaze"
+        consumerGroup: "cg-emdx-events"
+        read_count: 25
+        read_block_ms: 150
+        sensorSpecificStream: false
+data:
+  metadata:
+    minTimeRangeInMSec: 1000
+    maxTimeRangeInMSec: 5000
+  trajectory:
+    minTimeRangeInMSec: 1000
+    maxTimeRangeInMSec: 5000
+metrics:
+  granularity:
+    unit: msec
+    value: 1000
+  fov:
+    barCount:
+      min: 12
+      max: 20
+    minTimeRangeInMSec: 1000
+    maxResults: 5000
+  tripwire:
+    barCount:
+      min: 12
+      max: 20
+    minTimeRangeInMSec: 1000
+    maxResults: 5000
+  roi:
+    barCount:
+      min: 12
+      max: 20
+    minTimeRangeInMSec: 1000
+    maxResults: 5000
+
+objectTypeAnalytics: true
+objectTypes:
+  - "*"  
