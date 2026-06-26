@@ -5,7 +5,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
 
-# How to use 
+# How to use
 # 
 # Publisher Terminal (on laptop)
 # source /opt/ros/humble/setup.bash
@@ -13,14 +13,17 @@ import cv2
 # python3 image_publisher.py
 # 
 # View (ON YAHBOOM screen )
-# probably dont need this  source /opt/ros/humble/setup.bash 
+# DONT NEED source /opt/ros/humble/setup.bash 
+# export DISPLAY=:0
 # ros2 run rqt_image_view rqt_image_view
 
-# publishes to /camera topic 
+
+# publishes images to the /camera/image_raw topic at 30 fps
+
 class ImagePublisher(Node):
     def __init__(self):
         super().__init__('image_publisher')
-        self.pub = self.create_publisher(Image, '/camera', 10)  
+        self.pub = self.create_publisher(Image, '/camera/image_raw', 10)  
         self.bridge = CvBridge()
 
         # Force the V4L2 backend for the USB (UVC) camera at /dev/video0.
@@ -44,10 +47,13 @@ class ImagePublisher(Node):
         h = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.get_logger().info(f'camera opened at {w}x{h}')
 
-        self.timer = self.create_timer(0.1, self.tick)   # 10 Hz
-
+        self.timer = self.create_timer(0.033, self.tick)   # 30 Hz
+        self.counter = 0
     def tick(self):
         ok, frame = self.cap.read()
+        if (self.counter % 30 == 0):
+            self.get_logger().info(f'Publishing frame {self.counter}')
+        self.counter = self.counter + 1
         if not ok:
             self.get_logger().warn('no frame')
             return
