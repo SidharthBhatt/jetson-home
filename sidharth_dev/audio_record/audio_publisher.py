@@ -61,7 +61,7 @@ class AudioPublisher(Node):
             self.get_logger().warn('low confidence')
             return
         if result.text.strip() in {"Thanks for watching!", "Thank you.", "", "Thank you for watching!", "Thanks for watching", "Thanks for watching",""}:
-            self.get_logger().warn('ignored phrase')
+            self.get_logger().warn('ignored because of a known hallucination phrase')
             return
         if result.compression_ratio > 2.4:
             self.get_logger().warn('repeated hallucinations')
