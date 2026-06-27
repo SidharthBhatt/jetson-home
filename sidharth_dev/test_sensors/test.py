@@ -17,6 +17,8 @@ for those the "version" column shows the USB device-release (bcdDevice) and the
 source is marked 'usb-descriptor' to be honest about it.
 
 Run:  python3 test.py
+
+
 """
 
 import os
@@ -197,3 +199,23 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+'''
+
+test.py — "what's attached and what version" (two passes)
+read_text(path) — a tiny helper that reads a small file and returns None if it doesn't exist. Used everywhere so a missing file never crashes the script.
+
+scan_usb() (Pass 1) — the universal layer. It globs /sys/bus/usb/devices/* and, for each device, reads the kernel's descriptor files: idVendor, idProduct, manufacturer, product, bcdDevice. It skips hubs and host controllers (you don't care about those), and builds one record per real device. This is how it lists the camera, ORBBEC, lidar bridge, gamepad — all in one loop, no dependencies. The version here is bcdDevice, the USB device-release number (not true firmware — the code is honest about that).
+
+probe_jetson() (Pass 2a) — reads /etc/nv_tegra_release and uses a regex to pull out R36 + REVISION: 4.3, formatting it as L4T R36.4.3. That's your Jetson's OS/firmware version.
+
+probe_board() (Pass 2b) — the driver board's real firmware. The tricky parts:
+
+It builds a list of candidate serial ports (/dev/myserial, /dev/ttyUSB0, /dev/ttyTHS1) but deduplicates by os.path.realpath — because myserial is just a symlink to ttyUSB0, so without this it'd open the same port twice.
+It skips ports it can't read/write (os.access) and reports that as "add user to dialout" instead of crashing — that's the error you saw before the dialout fix.
+For a usable port it opens Rosmaster(com=port), starts the receive thread, waits a second, and calls get_version(). First port that answers with a real version wins; otherwise it returns a "no response" hint.
+probe_lidar() (Pass 2c) — tries import ydlidar; since the SDK isn't installed, it honestly says so rather than faking a number.
+
+print_table() — measures the longest value in each column, then prints everything left-aligned. main() just runs the four probes, collects the records, and prints them.
+'''
