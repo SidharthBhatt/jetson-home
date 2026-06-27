@@ -32,6 +32,8 @@ class AudioPublisher(Node):
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
         sd.wait()
+        if np.sqrt((audio ** 2).mean()) < 0.01:   # ← clip is silent: skip decode + publish
+            return
         audio = audio.flatten().astype(np.float32) / 32768.0   # (N,1) int16 → (N,) float32 in [-1,1]
         
         print("Done. Saving...")
