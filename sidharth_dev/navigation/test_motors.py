@@ -35,7 +35,7 @@ class TestMotors(Node):
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
         self.publish_rate = 0.5
-        self.timer = self.create_timer(self.publish_rate, self.publish_cmd_vel)  # every 0.5 seconds
+        
         time.sleep(1.0)
 
     def publish_cmd_vel(self, linear_x, angular_z, duration):
