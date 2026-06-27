@@ -9,6 +9,8 @@ from datetime import datetime
 import whisper
 from pathlib import Path
 from std_msgs.msg import String
+import numpy as np
+
 
 
 # How to use
@@ -29,13 +31,16 @@ class AudioPublisher(Node):
         
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
+        audio = audio.flatten().astype(np.float32) / 32768.0   # (N,1) int16 → (N,) float32 in [-1,1]
+        
         sd.wait()
         print("Done. Saving...")
 
         # if not ok:
         #     self.get_logger().warn('no audio')
         #     return
-        audio = (whisper.pad_or_trim(audio))
+        audio = whisper.pad_or_trim(audio)
+       
 
         # make log-Mel spectrogram and move to the same device as the model
         mel = whisper.log_mel_spectrogram(audio, n_mels=self.model.dims.n_mels).to(self.model.device)

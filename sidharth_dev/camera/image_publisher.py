@@ -14,7 +14,7 @@ import cv2
 # 
 # View (ON YAHBOOM screen )
 # DONT NEED source /opt/ros/humble/setup.bash 
-# export DISPLAY=:0
+# export DISPLAY=:0 
 # ros2 run rqt_image_view rqt_image_view
 
 
