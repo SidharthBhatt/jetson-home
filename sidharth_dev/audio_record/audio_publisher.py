@@ -16,6 +16,9 @@ import numpy as np
 # How to use
 #
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
+
+
+# python3 audio_publisher.py
 DURATION = 10
 SAMPLE_RATE = 16000
 
