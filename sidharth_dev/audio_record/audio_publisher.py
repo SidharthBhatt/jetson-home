@@ -54,7 +54,17 @@ class AudioPublisher(Node):
         # decode the audio
         options = whisper.DecodingOptions()
         result = whisper.decode(self.model, mel, options)
-        if result.text.strip() in {"Thanks for watching!", "Thank you.", ""}:
+        if result.no_speech_prob > 0.6:
+            self.get_logger().warn('no speech detected')
+            return
+        if result.avg_logprob < -1:
+            self.get_logger().warn('low confidence')
+            return
+        if result.text.strip() in {"Thanks for watching!", "Thank you.", "", "Thank you for watching!", "Thanks for watching", "Thanks for watching",""}:
+            self.get_logger().warn('ignored phrase')
+            return
+        if result.compression_ratio > 2.4:
+            self.get_logger().warn('repeated hallucinations')
             return
         msg = String()
         msg.data = result.text
