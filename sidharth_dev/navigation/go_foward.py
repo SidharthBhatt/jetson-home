@@ -128,7 +128,7 @@ class TestMotors(Node):
 def main():
     rclpy.init()
 
-    robot = MoveRobotDemo()
+    robot = TestMotors()
 
     print("Starting movement demo")
 
@@ -158,20 +158,20 @@ def main():
     # Demo sequence
 
     print("Demo 1: forward")
-    robot.move_backward(forward_distance*5, forward_speed)
+    robot.move_backward(forward_distance, forward_speed)
     time.sleep(wait_between_demos)
 
     print("Demo 2: backward")
-    #robot.move_backward(backward_distance, backward_speed)
-    #time.sleep(wait_between_demos)
+    robot.move_backward(backward_distance, backward_speed)
+    time.sleep(wait_between_demos)
 
     print("Demo 3: forward curve left")
-    #robot.curve_left(left_curve_speed, left_turn_rate, left_curve_duration)
-    #time.sleep(wait_between_demos)
+    robot.curve_left(left_curve_speed, left_turn_rate, left_curve_duration)
+    time.sleep(wait_between_demos)
 
     print("Demo 4: forward curve right")
-    #robot.curve_right(right_curve_speed, right_turn_rate, right_curve_duration)
-    #time.sleep(wait_between_demos)
+    robot.curve_right(right_curve_speed, right_turn_rate, right_curve_duration)
+    time.sleep(wait_between_demos)
 
     print("Demo 5: stop")
     robot.stop()
