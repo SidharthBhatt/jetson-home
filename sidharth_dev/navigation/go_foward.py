@@ -29,13 +29,13 @@ How to tun the demo:
 
 
 '''
-class MoveRobotDemo(Node):
+class TestMotors(Node):
     def __init__(self):
-        super().__init__('move_robot_demo')
+        super().__init__('test_motors')
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        self.publish_rate = 10.0
-
+        self.publish_rate = 0.5
+        self.timer = self.create_timer(self.publish_rate, self.publish_cmd_vel)  # every 0.5 seconds
         time.sleep(1.0)
 
     def publish_cmd_vel(self, linear_x, angular_z, duration):
