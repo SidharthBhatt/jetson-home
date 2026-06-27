@@ -17,13 +17,13 @@ import numpy as np
 #
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
 DURATION = 10
-SAMPLE_RATE = 44100
+SAMPLE_RATE = 16000
 
 class AudioPublisher(Node):
     def __init__(self):
         super().__init__('audio_publisher')
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
-        self.model = whisper.load_model("base")
+        self.model = whisper.load_model("medium")
         timer_period = 10
         self.timer = self.create_timer(timer_period, self.tick_callback)  # every 10 seconds
 
@@ -31,9 +31,9 @@ class AudioPublisher(Node):
         
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
+        sd.wait()
         audio = audio.flatten().astype(np.float32) / 32768.0   # (N,1) int16 → (N,) float32 in [-1,1]
         
-        sd.wait()
         print("Done. Saving...")
 
         # if not ok:
