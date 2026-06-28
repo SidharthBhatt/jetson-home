@@ -3,7 +3,6 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 import time
 
-
 '''
 what is this code doing?
 
