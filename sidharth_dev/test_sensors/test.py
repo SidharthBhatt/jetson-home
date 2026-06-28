@@ -16,7 +16,9 @@ Cameras, the mic and the gamepad do not expose a queryable firmware version, so
 for those the "version" column shows the USB device-release (bcdDevice) and the
 source is marked 'usb-descriptor' to be honest about it.
 
-Run:  python3 test.py
+Run:  
+cd sidharth_dev/test_sensors/
+python3 test.py
 
 
 """
