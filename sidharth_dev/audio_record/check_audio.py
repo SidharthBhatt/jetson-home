@@ -166,7 +166,7 @@ class AudioCheck:
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
         except subprocess.TimeoutExpired:
-            return status("working", False, "recording timed out (mic not streaming)")
+            return status("working", False, "recording timed out (mic not streaming) -> recommended action: fully power-cycle robot")
         except Exception as e:
             return status("working", False, f"arecord failed: {e}")
 
@@ -182,7 +182,7 @@ class AudioCheck:
         # squaring makes negatives count too, so it's a clean "how loud was it".
         rms = float(np.sqrt(np.mean(samples ** 2)))
         if rms < SILENCE_RMS:
-            return status("working", False, f"silent (RMS={rms:.0f}) - muted or wrong source?")
+            return status("working", False, f"silent (RMS={rms:.0f}) - muted or wrong source ? -> recommended action: fully power-cycle robot   ")
         return status("working", True, f"hears something (RMS={rms:.0f})")
 
     # ---- run every check and hand back the list of results ----
