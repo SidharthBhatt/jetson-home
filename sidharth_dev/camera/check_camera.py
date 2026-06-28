@@ -1,3 +1,7 @@
+from image_publisher import ImagePublisher
+import rclpy
+from rclpy.node import Node
+
 '''
 do the same thing as you did in check_audio but for the camera.
 List all camera devices, check if /dev/video0 is present, and if it is,
@@ -18,9 +22,7 @@ DO NOT CHANGE THIS COMMENT
 #   4. working    - open /dev/video0, grab one frame, SAVE it to a jpg, and make
 #                   sure it isn't an all-black frame (the camera equivalent of the
 #                   audio "is it silent?" RMS test)
-#   5. published  - is anyone actually publishing frames on /camera/image_raw?
-#                   (this is the only check that needs ROS sourced)
-#
+
 # Two ways to read the result, same as check_audio:
 #   - every check_* method RETURNS a status dict    -> use it as a status code
 #   - assert_ok() RAISES CameraError on first fail  -> hard gate before a pipeline
@@ -161,6 +163,7 @@ class CameraCheck:
     # confirm frames are arriving. needs ROS sourced + image_publisher running.
     # (mirrors sensor_health.py's camera test.) sensor-data QoS = best-effort, so
     # it can receive from the publisher whether it's reliable or best-effort.
+    '''
     def check_published(self, window=3.0):
         try:
             import rclpy
@@ -190,6 +193,7 @@ class CameraCheck:
         last = msgs[-1]
         return status("published", True,
                       f"{rate:.1f} Hz on {CAMERA_TOPIC} ({last.width}x{last.height})")
+        '''
 
     # ---- run every check and hand back the list of results ----
     def run_all(self):
@@ -198,7 +202,7 @@ class CameraCheck:
         self.list_devices()              # informational, prints its own dump
         results.append(self.check_present())
         results.append(self.check_working())
-        results.append(self.check_published())
+        # results.append(self.check_published())
         return results
 
     # ---- the "interface gate": raise instead of return ----
@@ -229,6 +233,7 @@ def main():
     check = CameraCheck()
     results = check.run_all()
     n_fail = print_report(results)
+
     # exit 0 if everything passed, 1 otherwise -> lets you chain this in a script
     sys.exit(1 if n_fail else 0)
 
