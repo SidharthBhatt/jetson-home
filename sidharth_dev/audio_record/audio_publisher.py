@@ -73,6 +73,7 @@ class AudioPublisher(Node):
         msg.data = result.text
         self.pub.publish(msg)
 
+
 def main():
     rclpy.init()
     node = AudioPublisher()
