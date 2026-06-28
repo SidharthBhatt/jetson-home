@@ -17,6 +17,7 @@ Passive by default. Pass --active to also run the tests that move hardware:
 
 Run:
     source /opt/ros/humble/setup.bash
+    cd sidharth_dev/test_sensors/
     python3 sensor_health.py            # passive (safe)
     python3 sensor_health.py --active   # + speak + MOVES THE ROBOT
 """
