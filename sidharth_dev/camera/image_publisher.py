@@ -61,6 +61,9 @@ class ImagePublisher(Node):
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = 'camera'
         self.pub.publish(msg)
+    def publish_for_one_second(self):
+        for i in range(30):
+            self.tick()
 
 def main():
     rclpy.init()
