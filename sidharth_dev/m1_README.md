@@ -1,4 +1,4 @@
-# Deliverable 1 - Confirm the car and sensors work
+# Deliverable 1: Confirm the car and sensors work
 
 
 This deliverable contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
