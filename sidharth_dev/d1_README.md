@@ -220,7 +220,7 @@ so it assumes the corresponding publishers are already running.
 * `motors` → `/odom` publishing
 
 Passive (safe) by default; `--active` additionally asks you to speak (whisper
-transcribes it) and **briefly drives the robot** to confirm `/odom` moves, then
+transcribes it) and **briefly drives the robot forward** to confirm `/odom` moves, then
 always stops.
 
 ```bash
