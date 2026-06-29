@@ -233,26 +233,64 @@ source /opt/ros/humble/setup.bash
 python3 check_motors.py
 ```
 
+Example output:
+
+```
+--- serial ports ---
+  /dev/ttyTHS1, /dev/ttyTHS2, /dev/ttyUSB0, /dev/ttyUSB1
+
+--- Yahboom udev symlinks ---
+  /dev/myserial -> /dev/ttyUSB0
+  /dev/rplidar -> /dev/ttyUSB1
+  /dev/ydlidar -> /dev/ttyUSB1
+Rosmaster Serial Opened! Baudrate=115200
+----------------create receive threading--------------
+
+=== motor check ===
+  [ ok ] usb        Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
+  [ ok ] present    usable serial port(s): ['/dev/myserial', '/dev/ttyTHS1']
+  [ ok ] working    board v3.6 @ /dev/myserial, battery 12.2V
+
+3 checks, 0 failed.
+```
+
 ### 3.5 Control-board wiring/identity — `navigation/check_control_board.py`
 
-## FIX THIS
-This is the **missing identity check** that the others can't do. `check_motors.py`
-proves *some* board answers; this proves `/dev/myserial` is wired to the **right
-chip**. It inspects only the *plumbing* (pure `os` + `udevadm`, no ROS, no opening
-the port), so it is safe to run even while a driver owns the port.
+`check_motors.py` proves that *some* board answers on a serial port. It does not
+prove that `/dev/myserial` points at the control board and not at the LiDAR, and
+that gap is exactly the bug that bit me. The LiDAR (CP2102) and the control board
+(CH340) both come up as `ttyUSB*`, and out of the box the Yahboom udev rule had
+`/dev/myserial` bound to the LiDAR's chip. **I had to go into the udev rules and
+manually change the binding so `/dev/myserial` points at the control board's CH340
+instead of the LiDAR.** The full story is in [Roadblocks](#roadblocks).
+
+This check is the guard that makes sure that never silently comes back. It only
+looks at the plumbing (pure `os` + `udevadm`, no ROS, never opens the port), so it
+is safe to run even while a driver owns the port.
 
 * **usb** — is the control board's own chip `1a86:7523` on the bus? (stricter than
  the motor check, which matches any serial bridge).
-* **present** — does `/dev/myserial` exist and is it read/write? (distinguishes a
- missing link from a *dangling* one).
+* **present** — does `/dev/myserial` exist and is it read/write? (tells a missing
+ link apart from a *dangling* one).
 * **identity (working)** — does `/dev/myserial` actually resolve to `1a86:7523`?
- If it resolves to the LiDAR's `10c4:ea60` it says so out loud: *"myserial is bound
- to the LiDAR — rebind it."* This is the check that would have caught the udev
- mis-bind that cost us a debugging session (see [`ROADBLOCKS.md`](ROADBLOCKS.md)).
+ If it resolves to the LiDAR's `10c4:ea60` it says so straight out: *"myserial is
+ bound to the LiDAR, rebind it."* It does not care which `ttyUSBx` the link lands
+ on, only which chip is behind it.
 
 ```bash
 cd ~/sidharth_dev/navigation
 python3 check_control_board.py
+```
+
+Example output:
+
+```
+=== control board check ===
+  [ ok ] usb        Bus 001 Device 007: ID 1a86:7523 QinHeng Electronics CH340 serial converter
+  [ ok ] present    /dev/myserial -> /dev/ttyUSB0
+  [ ok ] identity   /dev/myserial -> /dev/ttyUSB0 is the control board (1a86:7523)
+
+3 checks, 0 failed.
 ```
 
 ---
