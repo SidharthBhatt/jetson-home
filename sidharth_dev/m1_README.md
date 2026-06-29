@@ -113,9 +113,9 @@ card 0: Sensor [ORBBEC Depth Sensor], device 0: USB Audio [USB Audio]
 ... (card 2 = NVIDIA Jetson Orin NX APE, 20 virtual XBAR cards, omitted) ...
 
 --- pulseaudio sources (pactl list sources short) ---
-0	alsa_input.usb-Orbbec_R__ORBBEC_Depth_Sensor-01.analog-stereo	module-alsa-card.c	s16le 2ch 48000Hz	SUSPENDED
-1	alsa_output.platform-sound.analog-stereo.monitor	module-alsa-card.c	s16le 2ch 44100Hz	SUSPENDED
-2	alsa_input.platform-sound.analog-stereo	module-alsa-card.c	s16le 2ch 44100Hz	SUSPENDED
+0  alsa_input.usb-Orbbec_R__ORBBEC_Depth_Sensor-01.analog-stereo  module-alsa-card.c  s16le 2ch 48000Hz  SUSPENDED
+1  alsa_output.platform-sound.analog-stereo.monitor  module-alsa-card.c  s16le 2ch 44100Hz  SUSPENDED
+2  alsa_input.platform-sound.analog-stereo  module-alsa-card.c  s16le 2ch 44100Hz  SUSPENDED
 
 === audio check ===
   [ ok ] usb      Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
