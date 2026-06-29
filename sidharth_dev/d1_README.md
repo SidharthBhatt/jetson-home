@@ -205,14 +205,14 @@ python3 check_control_board.py
 
 ---
 
-## 4. Cross-cutting tools
+## 4. Cross cutting  tools
 
-### `test_sensors/sensor_health.py` — ROS data-flow ("liveness") checks
+### `test_sensors/sensor_health.py` — ROS data-flow checks
 
 Where the per-device checks talk to hardware directly, this one checks the **ROS
 interface**: it subscribes to the live topics and asks "is real data flowing at a
 healthy rate?". **Liveness == data at the expected rate, not "a process exists",**
-so it assumes the matching drivers are already running.
+so it assumes the corresponding publishers are already running.
 
 * `camera` → `/camera/image_raw` ≥ ~25 Hz and not all-black
 * `lidar` → `/scan` ≥ ~5 Hz with finite ranges
