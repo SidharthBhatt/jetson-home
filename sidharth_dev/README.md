@@ -1,16 +1,15 @@
 # Deliverable 1 - Confirm the car and sensors work
 
- **Milestone 1: "Confirm the car and sensors
-work."**
-It contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
+
+This deliverable contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
 
 | Assignment item | File Location |
 |---|---|
-| Identify the camera, LiDAR, microphone, motor-control, and ROS interfaces | [`test_sensors/test.py`](test_sensors/test.py) (inventory) + the per-device USB scans |
+| Identify the camera, LiDAR, microphone, motor-control, and ROS interfaces | [`test_sensors/test.py`](test_sensors/test.py) |
 | One working test script per available sensor / interface | [`camera/check_camera.py`](camera/check_camera.py), [`audio_record/check_audio.py`](audio_record/check_audio.py), [`navigation/check_lidar.py`](navigation/check_lidar.py), [`navigation/check_motors.py`](navigation/check_motors.py), [`navigation/check_control_board.py`](navigation/check_control_board.py) |
 | ROS-interface (data-flow) tests | [`test_sensors/sensor_health.py`](test_sensors/sensor_health.py) |
 | One combined preflight + overall table | [`test_sensors/check_all_sensors.py`](test_sensors/check_all_sensors.py) |
-| Installation steps & unresolved errors | this file + [`ROADBLOCKS.md`](ROADBLOCKS.md) |
+
 
 > The combined checker and its example output are documented in their own section:
 > [**The combined checker — `check_all_sensors.py`**](#the-combined-checker--check_all_sensorspy).
