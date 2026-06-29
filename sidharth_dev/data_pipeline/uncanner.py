@@ -14,7 +14,7 @@ python3 uncanner.py
 reader = rosbag2_py.SequentialReader()
 reader.open(
     rosbag2_py.StorageOptions(uri="rosbag2_2026_06_30-04_36_03", storage_id="sqlite3"),
-    
+    rosbag2_py.ConverterOptions("", ""),
 )
 
 bridge = CvBridge()
