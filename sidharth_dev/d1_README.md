@@ -262,7 +262,7 @@ cd ~/sidharth_dev/test_sensors
 python3 check_all_sensors.py
 ```
 
-Run it with the **drivers down**  each `check_working` actually exercises its
+Run it with the **publishers turned off.** Each `check_working` exercises its
 device (records 1 s, grabs a frame, spins the LiDAR, reads the board), and those
 ports are single-access, so a running driver would make `check_working` say `busy`.
 
