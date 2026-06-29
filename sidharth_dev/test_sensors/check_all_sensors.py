@@ -40,10 +40,14 @@ ROOT = os.path.dirname(HERE)            # ~/sidharth_dev
 
 # (label, subdir, module, class) for each per-device checker.
 SPECS = [
-    ("audio",  "audio_record", "check_audio",  "AudioCheck"),
-    ("camera", "camera",       "check_camera", "CameraCheck"),
-    ("lidar",  "navigation",   "check_lidar",  "LidarCheck"),
-    ("motors", "navigation",   "check_motors", "MotorCheck"),
+    ("audio",   "audio_record", "check_audio",         "AudioCheck"),
+    ("camera",  "camera",       "check_camera",        "CameraCheck"),
+    ("lidar",   "navigation",   "check_lidar",         "LidarCheck"),
+    # control-board plumbing/identity gate - runs BEFORE motors so a mis-wired
+    # /dev/myserial is diagnosed (loose cable / udev points at the LiDAR) before
+    # MotorCheck's functional "open the board" check fails with a generic message.
+    ("control", "navigation",   "check_control_board", "ControlBoardCheck"),
+    ("motors",  "navigation",   "check_motors",        "MotorCheck"),
 ]
 
 # friendly identity of every device we expect, keyed by usb vendor:product.
