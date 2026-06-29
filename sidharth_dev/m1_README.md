@@ -364,47 +364,47 @@ the longest subsystem name and the longest check name, left-aligns every column,
 tags each row `[ ok ]` or `[FAIL]`, and finishes with a one-line tally
 (`N checks, M failed.`). The process exit code is `0` only when `M == 0`.
 
-### Example output (captured 2026-06-28 and all green)
+### Example output (all 15 green)
 
 ```
 === devices on this robot ===
- [+] ORBBEC Depth Sensor    = microphone (audio in)
- [+] Orbbec USB 2.0 Camera  = RGB camera -> /dev/video0
- [+] Silicon Labs CP2102    = LiDAR -> /dev/ydlidar
- [+] QinHeng CH340          = motor control board -> /dev/myserial
- [+] DragonRise Controller  = USB gamepad (teleop)
- [+] Jetson Orin NX         = compute host
+  [+] ORBBEC Depth Sensor    = microphone (audio in)
+  [+] Orbbec USB 2.0 Camera  = RGB camera -> /dev/video0
+  [+] Silicon Labs CP2102    = LiDAR -> /dev/ydlidar
+  [+] QinHeng CH340          = motor control board -> /dev/myserial
+  [+] DragonRise Controller  = USB gamepad (teleop)
+  [+] Jetson Orin NX         = compute host
 Rosmaster Serial Opened! Baudrate=115200
 ----------------create receive threading--------------
 
-
 === sensor preflight ===
- [ ok ] audio    usb       Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
- [ ok ] audio    present   /proc/asound/card0 exists
- [ ok ] audio    working   hears something (RMS=2887)
- [ ok ] camera   usb       Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
- [ ok ] camera   present   /dev/video0 exists
- [ ok ] camera   working   grabbed 640x480 frame (mean=126.3), saved /tmp/camera_check.jpg
- [ ok ] lidar    usb       Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
- [ ok ] lidar    present   /dev/ydlidar -> /dev/ttyUSB0
- [ ok ] lidar    working   streaming 5257 bytes in 1s (looks like YDLidar packets)
- [ ok ] control  usb       Bus 001 Device 007: ID 1a86:7523 QinHeng Electronics CH340 serial converter
- [ ok ] control  present   /dev/myserial -> /dev/ttyUSB1
- [ ok ] control  identity  /dev/myserial -> /dev/ttyUSB1 is the control board (1a86:7523)
- [ ok ] motors   usb       Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
- [ ok ] motors   present   usable serial port(s): ['/dev/myserial', '/dev/ttyUSB0', '/dev/ttyTHS1']
- [ ok ] motors   working   board v3.6 @ /dev/myserial, battery 11.3V
-
+  [ ok ] audio    usb       Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
+  [ ok ] audio    present   /proc/asound/card0 exists
+  [ ok ] audio    working   hears something (RMS=3834)
+  [ ok ] camera   usb       Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
+  [ ok ] camera   present   /dev/video0 exists
+  [ ok ] camera   working   grabbed 640x480 frame (mean=196.2), saved /tmp/camera_check.jpg
+  [ ok ] lidar    usb       Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
+  [ ok ] lidar    present   /dev/ydlidar -> /dev/ttyUSB1
+  [ ok ] lidar    working   streaming 457 bytes in 1s (looks like YDLidar packets)
+  [ ok ] control  usb       Bus 001 Device 007: ID 1a86:7523 QinHeng Electronics CH340 serial converter
+  [ ok ] control  present   /dev/myserial -> /dev/ttyUSB0
+  [ ok ] control  identity  /dev/myserial -> /dev/ttyUSB0 is the control board (1a86:7523)
+  [ ok ] motors   usb       Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
+  [ ok ] motors   present   usable serial port(s): ['/dev/myserial', '/dev/ttyTHS1']
+  [ ok ] motors   working   board v3.6 @ /dev/myserial, battery 12.2V
 
 15 checks, 0 failed.
 ```
 
-Reading the table: the `audio`/`camera` `usb` rows print whichever Orbbec line
-`lsusb` matched first (both Orbbec devices share the "Orbbec" string); `lidar
-working` shows real bytes streamed off the spinning LiDAR; `control identity`
-confirms `/dev/myserial` resolves to the CH340 (`1a86:7523`) and **not** the LiDAR;
-and `motors working` reports live firmware `v3.6` and battery `11.3 V` read straight
-off the board.
+Reading the table: the `audio` and `camera` `usb` rows both print the Camera line
+because both Orbbec devices share the "Orbbec" string and the camera shows up first
+in `lsusb`; `lidar working` is real bytes streamed off the spinning LiDAR; `control
+identity` confirms `/dev/myserial` resolves to the CH340 (`1a86:7523`) and **not**
+the LiDAR; and `motors working` reads live firmware `v3.6` and battery `12.2 V`
+straight off the board. Notice the LiDAR is on `ttyUSB1` and the board on `ttyUSB0`
+here, on an earlier boot they were swapped. That is the whole reason the checks key
+off the udev symlinks and the chip IDs and never the bare `ttyUSB` number.
 
 ---
 
