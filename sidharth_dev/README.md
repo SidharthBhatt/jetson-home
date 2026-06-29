@@ -4,8 +4,7 @@
 
  **Milestone 1: "Confirm the car and sensors
 work."**
-It contains one small, independent test script per device on the robot,
-plus a single combined checker that runs them all and prints one PASS/FAIL table.
+It contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
 
 | Assignment item | Where it lives |
 |---|---|
