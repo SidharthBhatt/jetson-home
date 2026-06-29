@@ -11,14 +11,11 @@ This deliverable contains one small, independent test script per device on the r
 | One combined preflight + overall table | [`test_sensors/check_all_sensors.py`](test_sensors/check_all_sensors.py) |
 
 
-> The combined checker and its example output are documented in their own section:
-> [**The combined checker — `check_all_sensors.py`**](#the-combined-checker--check_all_sensorspy).
-
----
 
 
 
-## 1. Map of what is plugged in and what it actually does:
+
+## 1. Map of what is plugged in and what it does:
 
 | Device (USB id) | What it really is | OS handle |
 |---|---|---|
