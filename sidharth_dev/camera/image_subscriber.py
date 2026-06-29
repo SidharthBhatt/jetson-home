@@ -7,16 +7,11 @@ import cv2
 
 # How to use
 # 
-# Publisher Terminal (on laptop)
+# Subscriber Terminal (on laptop) 
 # source /opt/ros/humble/setup.bash
 # cd ~/sidharth_dev/camera
 # python3 image_subscriber.py
 # 
-# View (ON YAHBOOM screen )
-# DONT NEED source /opt/ros/humble/setup.bash 
-# export DISPLAY=:0
-# ros2 run rqt_image_view rqt_image_view
-
 
 # publishes images to the /camera/image_raw topic at 30 fps
 
