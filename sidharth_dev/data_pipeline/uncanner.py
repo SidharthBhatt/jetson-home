@@ -4,6 +4,12 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
 
+
+'''
+source /opt/ros/humble/setup.bash
+cd sidharth_dev/data_pipeline
+python3 uncanner.py
+'''
 # 1. Open the bag (point at the DIRECTORY, not the .db3)
 reader = rosbag2_py.SequentialReader()
 reader.open(
