@@ -10,7 +10,7 @@ import cv2
 # Publisher Terminal (on laptop)
 # source /opt/ros/humble/setup.bash
 # cd ~/sidharth_dev/camera
-# python3 image_publisher.py
+# python3 image_subscriber.py
 # 
 # View (ON YAHBOOM screen )
 # DONT NEED source /opt/ros/humble/setup.bash 
