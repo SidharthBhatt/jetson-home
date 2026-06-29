@@ -24,7 +24,7 @@ while reader.has_next():
     if topic == "/camera/image_raw":
         msg = deserialize_message(data, Image)      # step 2: bytes -> Image
         frame = bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")  # step 3a
-        print("image at t_nanosec")
+        print("image at f'{t_nanosec}")
         # cv2.imwrite(f"frame_{t_nanosec}.png", frame)                # step 3b
         count += 1
 print(f"wrote {count} images")
