@@ -4,7 +4,7 @@
 work."**
 It contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
 
-| Assignment item | Where it lives |
+| Assignment item | File Location |
 |---|---|
 | Identify the camera, LiDAR, microphone, motor-control, and ROS interfaces | [`test_sensors/test.py`](test_sensors/test.py) (inventory) + the per-device USB scans |
 | One working test script per available sensor / interface | [`camera/check_camera.py`](camera/check_camera.py), [`audio_record/check_audio.py`](audio_record/check_audio.py), [`navigation/check_lidar.py`](navigation/check_lidar.py), [`navigation/check_motors.py`](navigation/check_motors.py), [`navigation/check_control_board.py`](navigation/check_control_board.py) |
