@@ -32,8 +32,7 @@ This deliverable contains one small, independent test script per device on the r
 
 ```
 sidharth_dev/
-├── README.md                  ← this file (status + how to run)
-├── ROADBLOCKS.md              ← problems we hit and how we solved them
+├── m1_README.md               ← this file (status + how to run)
 │
 ├── audio_record/              ← microphone (ORBBEC) — capture / transcribe
 │   ├── check_audio.py         ★ MIC test       (the deliverable health check)
