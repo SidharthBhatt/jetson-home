@@ -1,6 +1,6 @@
 # Deliverable 1 - Confirm the car and sensors work
 
-# Yahboom Robot — Sensor & Interface Test Suite
+
 
 This repository is the deliverable for **Milestone 1: "Confirm the car and sensors
 work."** It contains one small, independent test script per device on the robot,
