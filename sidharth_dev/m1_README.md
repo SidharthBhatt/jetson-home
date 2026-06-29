@@ -102,6 +102,36 @@ cd ~/sidharth_dev/audio_record
 python3 check_audio.py
 ```
 
+Example output (the `arecord -l` dump also lists ~20 Jetson APE virtual cards, cut here):
+
+```
+--- ALSA capture cards (arecord -l) ---
+**** List of CAPTURE Hardware Devices ****
+card 0: Sensor [ORBBEC Depth Sensor], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+... (card 2 = NVIDIA Jetson Orin NX APE, 20 virtual XBAR cards, omitted) ...
+
+--- pulseaudio sources (pactl list sources short) ---
+0	alsa_input.usb-Orbbec_R__ORBBEC_Depth_Sensor-01.analog-stereo	module-alsa-card.c	s16le 2ch 48000Hz	SUSPENDED
+1	alsa_output.platform-sound.analog-stereo.monitor	module-alsa-card.c	s16le 2ch 44100Hz	SUSPENDED
+2	alsa_input.platform-sound.analog-stereo	module-alsa-card.c	s16le 2ch 44100Hz	SUSPENDED
+
+=== audio check ===
+  [ ok ] usb      Bus 001 Device 010: ID 2bc5:050f Orbbec 3D Technology International, Inc USB 2.0 Camera
+  [ ok ] present  /proc/asound/card0 exists
+  [ ok ] working  hears something (RMS=3555)
+
+3 checks, 0 failed.
+```
+
+The `usb` row prints the Camera line, not the depth sensor, because both Orbbec
+devices have "Orbbec" in their `lsusb` name and the camera comes up first. The mic
+itself is `card 0` in the ALSA list above. The `working` RMS bounces around with
+room noise (roughly 3000–4000 in the lab), which is what I want, it should never sit
+near zero. If it ever does, that is the silent-default-source problem in
+[Roadblocks](#roadblocks).
+
 ### 3.2 Camera — `camera/check_camera.py`
 
 * **usb** — looks for a `Camera` line in `lsusb`.
