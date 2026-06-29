@@ -408,6 +408,68 @@ off the udev symlinks and the chip IDs and never the bare `ttyUSB` number.
 
 ---
 
+## Roadblocks
+
+The three problems that actually cost me time, and what fixed them.
+
+### 1. `/dev/myserial` was bound to the LiDAR, not the control board
+
+The bringup talks to the control board over `/dev/myserial`, and the board kept
+dropping out with a useless "board didn't answer" error. The cause: the LiDAR
+(CP2102, `10c4:ea60`) and the control board (CH340, `1a86:7523`) both enumerate as
+`ttyUSB*`, and the order is not stable across reboots, so `ttyUSB0` is sometimes one
+and sometimes the other. On top of that the udev rule that ships with the robot
+pointed `/dev/myserial` straight at the LiDAR's chip:
+
+```
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="myserial", MODE="0666"
+```
+
+So `myserial` was the LiDAR, and a loose USB cable on the board made it flaky on top
+of that.
+
+The fix was manual. I went into `/etc/udev/rules.d`, disabled that rule (renamed it
+to `99-yahboom-myserial.rules.disabled`), and wrote my own `serial.rules` that binds
+`myserial` to the control board's CH340 by its own vendor:product id:
+
+```
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE:="0777", SYMLINK+="myserial"
+```
+
+The LiDAR keeps its own `/dev/ydlidar` symlink from `ydlidar.rules`. Reload without
+a reboot:
+
+```bash
+sudo udevadm control --reload-rules && sudo udevadm trigger
+```
+
+After that `myserial` follows the board's chip no matter which `ttyUSB` number it
+lands on, which you can see in the table above where the numbers flipped between
+boots. `check_control_board.py` exists so this can never silently come back.
+
+### 2. The mic is the depth camera, and the default audio source is silent
+
+There is no separate microphone, audio input lives on the ORBBEC depth sensor, which
+shows up as ALSA `card 0`. Worse, PulseAudio's default source flips to the silent
+built-in input across reboots, so recording from the default device gives you 10
+seconds of nothing and whisper just returns "".
+
+The fix is to never trust the default. The audio code runs `pactl list sources
+short`, finds the source with `orbbec` in the name, and pins `PULSE_SOURCE` to it
+before recording. It also records through pulse (`arecord -D pulse`) instead of
+around it, because going straight at `plughw:0,0` fails "busy" since pulse already
+owns the card.
+
+### 3. Whisper makes up text on silence
+
+When a clip is silent or near-silent, whisper confidently hallucinates, usually
+"Thanks for watching!" or "Thank you." `audio_publisher.py` filters those out before
+publishing to `/audio/transcribed`: it skips clips under an RMS floor, drops results
+with high no-speech probability, low average log-prob, or a too-high compression
+ratio, and throws away a list of known hallucination phrases.
+
+---
+
 ### Installation & dependencies
 
 Confirmed working on: **Jetson Orin NX, JetPack / L4T R36.4.3, Ubuntu 22.04, Python
@@ -441,7 +503,7 @@ Yahboom-provided library for the control board (already installed on this robot)
 * **Stable serial symlinks** — `/etc/udev/rules.d/ydlidar.rules` pins the LiDAR's
  CP2102 to `/dev/ydlidar`, and `/etc/udev/rules.d/serial.rules` pins the CH340 to
  `/dev/myserial`. **Getting this rule right was a roadblock** — see
- [`ROADBLOCKS.md`](ROADBLOCKS.md).
+ [Roadblocks](#roadblocks).
 
 ## 6. Quick reference
 
