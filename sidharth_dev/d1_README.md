@@ -318,7 +318,7 @@ off the board.
 
 ---
 
-## 5. Installation & dependencies
+### Installation & dependencies
 
 Confirmed working on: **Jetson Orin NX, JetPack / L4T R36.4.3, Ubuntu 22.04, Python
 3.10.12, ROS 2 Humble.**
