@@ -91,7 +91,7 @@ in shell scripts.
 
 ### 3.1 Microphone — `audio_record/check_audio.py`
 
-The mic is the ORBBEC depth sensor on ALSA `card 0`.
+The mic is the ORBBEC depth sensor on ALSA `card 0`. In the future it will be replaced with a standalone microphone, but for right now it works. It picks up on a lot of noise even in silence, which is a good substitute for the background noise of the Polaris Ranger or Tractor.
 
 * **usb** — looks for `orbbec` in `lsusb`.
 * **present** — `/proc/asound/card0` exists (the OS handle for the sound card).
