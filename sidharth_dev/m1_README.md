@@ -192,6 +192,29 @@ cd ~/sidharth_dev/navigation
 python3 check_lidar.py
 ```
 
+Example output:
+
+```
+--- /dev/ttyUSB* nodes ---
+  /dev/ttyUSB0, /dev/ttyUSB1
+
+--- /dev/serial/by-id (stable names -> ttyUSB) ---
+total 0
+lrwxrwxrwx 1 root root 13 Jan  1  1970 usb-1a86_USB_Serial-if00-port0 -> ../../ttyUSB0
+lrwxrwxrwx 1 root root 13 Jan  1  1970 usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0 -> ../../ttyUSB1
+
+--- lidar/control-board symlinks ---
+  /dev/ydlidar -> ttyUSB1
+  /dev/myserial -> ttyUSB0
+
+=== lidar check ===
+  [ ok ] usb        Bus 001 Device 011: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
+  [ ok ] present    /dev/ydlidar -> /dev/ttyUSB1
+  [ ok ] working    streaming 5241 bytes in 1s (looks like YDLidar packets)
+
+3 checks, 0 failed.
+```
+
 ### 3.4 Motor control board — `navigation/check_motors.py`
 
 * **usb** — looks for a CP210x/CH340/UART bridge (not fatal if absent — the board
