@@ -274,7 +274,7 @@ the longest subsystem name and the longest check name, left-aligns every column,
 tags each row `[ ok ]` or `[FAIL]`, and finishes with a one-line tally
 (`N checks, M failed.`). The process exit code is `0` only when `M == 0`.
 
-### Example output (full, captured 2026-06-28 — all green)
+### Example output (captured 2026-06-28 and all green)
 
 ```
 === devices on this robot ===
