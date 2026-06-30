@@ -30,8 +30,8 @@ class MicrophonePublisher(Node):
         super().__init__('microphone_publisher')
         self.declare_parameter('mode', 'real')
         mode = self.get_parameter('mode').value
-        self.pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
-        self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
+        self.raw_pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
+        self.txt_pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
         timer_period = 10
         if mode == "real":
