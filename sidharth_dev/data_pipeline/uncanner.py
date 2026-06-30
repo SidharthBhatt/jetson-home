@@ -13,7 +13,7 @@ python3 uncanner.py
 # 1. Open the bag (point at the DIRECTORY, not the .db3)
 reader = rosbag2_py.SequentialReader()
 reader.open(
-    rosbag2_py.StorageOptions(uri="rosbag2_2026_06_30-04_36_03", storage_id="sqlite3"),
+    rosbag2_py.StorageOptions(uri="rosbag2_2026_06_30-09_55_46", storage_id="sqlite3"),
     rosbag2_py.ConverterOptions("", ""),
 )
 
@@ -25,6 +25,6 @@ while reader.has_next():
         msg = deserialize_message(data, Image)      # step 2: bytes -> Image
         frame = bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")  # step 3a
         print(f"image at {t_nanosec}")
-        # cv2.imwrite(f"frame_{t_nanosec}.png", frame)                # step 3b
+        cv2.imwrite(f"frame_{t_nanosec}.png", frame)                # step 3b
         count += 1
 print(f"wrote {count} images")
