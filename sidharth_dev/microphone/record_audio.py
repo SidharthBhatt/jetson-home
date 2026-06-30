@@ -8,7 +8,7 @@ DURATION = 10
 SAMPLE_RATE = 44100
 #ENSURE IN SETTINGS INPUT DEVICE IS Microphone - ORBBEC Depth Sensor (with the mic emoji)
 #terminal 1
-# cd sidharth_dev/record_audio
+# cd ~/sidharth_dev/microphone
 # python3 record_audio.py
 time_now = datetime.now()
 print("Recording for 10 seconds...")

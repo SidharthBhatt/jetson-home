@@ -16,7 +16,7 @@ import numpy as np
 
 # Laptop Terminal 
 '''
-cd ~/sidharth_dev/audio_record
+cd ~/sidharth_dev/microphone
 python3 microphone_publisher.py --ros-args -p mode:=artificial
 '''
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
