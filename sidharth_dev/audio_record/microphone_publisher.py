@@ -44,6 +44,9 @@ class MicrophonePublisher(Node):
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
         sd.wait()
+        msg_audio = AudioData()
+        msg_audio.data = audio.tobytes()
+        self.raw_pub.publish(msg_audio)
         
         audio = audio.flatten().astype(np.float32) / 32768.0   # (N,1) int16 → (N,) float32 in [-1,1]
         if np.sqrt((audio ** 2).mean()) < 0.01:   # ← clip is silent: skip (decode + publish)
@@ -55,9 +58,7 @@ class MicrophonePublisher(Node):
         #     self.get_logger().warn('no audio')
         #     return
         audio = whisper.pad_or_trim(audio)
-        msg_audio = AudioData()
-        msg_audio.data = audio.tobytes()
-        self.raw_pub.publish(msg_audio)
+        
        
 
         # make log-Mel spectrogram and move to the same device as the model
@@ -87,7 +88,7 @@ class MicrophonePublisher(Node):
     def artificial_callback(self):
         # mic is broken so we will use this for now 
         audio = subprocess.run(["ffmpeg", "-v", "quiet", "-i", "/home/jetson/sidharth_dev/audio_record/output2026-06-25 06:13:10.663178.mp3", "-f", "s16le", "-ac", "1", "-ar", "16000", "pipe:1"], capture_output=True)
-        audio = np.frombuffer(audio.stdout, dtype=np.int16).astype(np.float32) / 32768.0
+        audio = np.frombuffer(audio.stdout, dtype=np.int16)
         msg_audio = AudioData()
         msg_audio.data = audio.tobytes()
         self.raw_pub.publish(msg_audio)
