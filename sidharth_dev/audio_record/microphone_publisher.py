@@ -32,13 +32,17 @@ SAMPLE_RATE = 16000
 class MicrophonePublisher(Node):
     def __init__(self):
         super().__init__('microphone_publisher')
+        self.declare_parameter('mode', 'auto')
         self.pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
         timer_period = 10
-        self.timer = self.create_timer(timer_period, self.artificial_callback)  # every 10 seconds
+        if parameter == "real":
+            self.timer = self.create_timer(timer_period, self.real_callback)  # every 10 seconds
+        if parameter == "artificial":
+            self.timer = self.create_timer(timer_period, self.artificial_callback)  # every 10 seconds
 
-    def regular_callback(self):
+    def real_callback(self):
         
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
