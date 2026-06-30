@@ -17,14 +17,10 @@ import numpy as np
 # Laptop Terminal 
 '''
 cd ~/sidharth_dev/audio_record
-python3 microphone_publisher.py
+python3 microphone_publisher.py --ros-args -p mode:=artificial
 '''
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
 
-'''
-cd ~/sidharth_dev/audio_record
-python3 microphone_publisher.py
-'''
 
 DURATION = 10
 SAMPLE_RATE = 16000
@@ -32,7 +28,7 @@ SAMPLE_RATE = 16000
 class MicrophonePublisher(Node):
     def __init__(self):
         super().__init__('microphone_publisher')
-        self.declare_parameter('mode', 'auto')
+        self.declare_parameter('mode', 'real')
         mode = self.get_parameter('mode').value
         self.pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
