@@ -33,6 +33,7 @@ class MicrophonePublisher(Node):
     def __init__(self):
         super().__init__('microphone_publisher')
         self.declare_parameter('mode', 'auto')
+        mode = self.get_parameter('mode').value
         self.pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
