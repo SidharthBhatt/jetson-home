@@ -24,7 +24,7 @@ are two ways to read the result:
     in front of the pipeline
 
 How to run:
-    cd ~/sidharth_dev/audio_record
+    cd ~/sidharth_dev/microphone
     python3 check_audio.py        # prints a report, exits 0 if all good, 1 if not
 
     # you can chain it so the publisher only starts if audio is healthy:
