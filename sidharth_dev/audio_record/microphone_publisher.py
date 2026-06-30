@@ -56,7 +56,7 @@ class MicrophonePublisher(Node):
         #     return
         audio = whisper.pad_or_trim(audio)
         msg_audio = AudioData()
-        msg_audio.data = audio.tolist()
+        msg_audio.data = audio.tobytes()
         self.raw_pub.publish(msg_audio)
        
 
@@ -89,7 +89,7 @@ class MicrophonePublisher(Node):
         audio = subprocess.run(["ffmpeg", "-v", "quiet", "-i", "/home/jetson/sidharth_dev/audio_record/output2026-06-25 06:13:10.663178.mp3", "-f", "s16le", "-ac", "1", "-ar", "16000", "pipe:1"], capture_output=True)
         audio = np.frombuffer(audio.stdout, dtype=np.int16).astype(np.float32) / 32768.0
         msg_audio = AudioData()
-        msg_audio.data = audio.tolist()
+        msg_audio.data = audio.tobytes()
         self.raw_pub.publish(msg_audio)
         msg_txt = String()
         msg_txt.data = "This is an artificial callback message [insert audio here]"
