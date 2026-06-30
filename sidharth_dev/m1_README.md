@@ -1,7 +1,7 @@
 # Deliverable 1: Confirm the car and sensors work
 
 
-This deliverable contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table.
+This deliverable contains one small, independent test script per device on the robot, plus a single combined checker that runs them all and prints one PASS/FAIL table. The command 'checkall' in the terminal runs an overall checker. 
 
 | Assignment item | File Location |
 |---|---|
