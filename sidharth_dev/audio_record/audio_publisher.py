@@ -17,8 +17,11 @@ import numpy as np
 #
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
 
+'''
+cd ~/sidharth_dev/audio_record
+python3 audio_publisher.py
+'''
 
-# python3 audio_publisher.py
 DURATION = 10
 SAMPLE_RATE = 16000
 
