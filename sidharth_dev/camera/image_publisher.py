@@ -12,7 +12,7 @@ source /opt/ros/humble/setup.bash
 cd ~/sidharth_dev/camera
 python3 image_publisher.py
 
-View (ON YAHBOOM screen )
+View (run on laptop, look at the robot's screen)
 DONT NEED source /opt/ros/humble/setup.bash 
 export DISPLAY=:0 
 ros2 run rqt_image_view rqt_image_view
