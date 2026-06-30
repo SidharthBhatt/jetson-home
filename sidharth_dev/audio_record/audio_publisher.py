@@ -79,6 +79,7 @@ class AudioTranscribedPublisher(Node):
         msg.data = result.text
         self.pub.publish(msg)
     def artificial_callback(self):
+        # mic is broken so we will use this for now 
         msg = String()
         msg.data = "This is an artificial callback message [insert audio here]"
         self.pub.publish(msg)
