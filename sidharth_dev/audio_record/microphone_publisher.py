@@ -6,10 +6,10 @@ import scipy.io.wavfile as wav
 import subprocess
 import os
 from datetime import datetime
-from audio_common_msgs.msg import AudioData
 import whisper
 from pathlib import Path
 from std_msgs.msg import String
+from audio_common_msgs.msg import AudioData
 import numpy as np
 
 
@@ -30,7 +30,7 @@ class MicrophonePublisher(Node):
         super().__init__('microphone_publisher')
         self.declare_parameter('mode', 'real')
         mode = self.get_parameter('mode').value
-        self.raw_pub = self.create_publisher(String, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
+        self.raw_pub = self.create_publisher(AudioData, '/audio/raw', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         self.txt_pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
         timer_period = 10
