@@ -31,9 +31,9 @@ class AudioPublisher(Node):
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         self.model = whisper.load_model("medium")
         timer_period = 10
-        self.timer = self.create_timer(timer_period, self.tick_callback)  # every 10 seconds
+        self.timer = self.create_timer(timer_period, self.regular_callback)  # every 10 seconds
 
-    def tick_callback(self):
+    def regular_callback(self):
         
         print("Recording for 10 seconds...")
         audio = sd.rec(int(DURATION * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
