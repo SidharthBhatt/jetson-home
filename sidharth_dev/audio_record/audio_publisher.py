@@ -6,6 +6,7 @@ import scipy.io.wavfile as wav
 import subprocess
 import os
 from datetime import datetime
+from audio_common_msgs.msg import AudioData
 import whisper
 from pathlib import Path
 from std_msgs.msg import String
