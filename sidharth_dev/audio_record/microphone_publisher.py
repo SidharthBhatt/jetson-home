@@ -34,9 +34,9 @@ class MicrophonePublisher(Node):
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
         timer_period = 10
-        if parameter == "real":
+        if mode == "real":
             self.timer = self.create_timer(timer_period, self.real_callback)  # every 10 seconds
-        if parameter == "artificial":
+        if mode == "artificial":
             self.timer = self.create_timer(timer_period, self.artificial_callback)  # every 10 seconds
 
     def real_callback(self):
