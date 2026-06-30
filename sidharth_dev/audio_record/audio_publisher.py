@@ -29,9 +29,9 @@ class AudioPublisher(Node):
     def __init__(self):
         super().__init__('audio_publisher')
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
-        self.model = whisper.load_model("medium")
+        #self.model = whisper.load_model("medium")
         timer_period = 10
-        self.timer = self.create_timer(timer_period, self.regular_callback)  # every 10 seconds
+        self.timer = self.create_timer(timer_period, self.artificial_callback)  # every 10 seconds
 
     def regular_callback(self):
         
