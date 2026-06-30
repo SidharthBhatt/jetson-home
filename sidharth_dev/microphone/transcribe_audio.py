@@ -2,9 +2,11 @@ import whisper
 from pathlib import Path
 #goes through the mp3 files and transcribes them, prints a one word token if it doesn't hear anything
 #terminal 2
+'''
+cd ~/sidharth_dev/microphone
+python3 transcribe_audio.py
+'''
 
-# source /home/jetson/yolov5_env/bin/activate
-# python3 transcribe_audio.py
 model = whisper.load_model("base")
 
 # load audio and pad/trim it to fit 30 seconds
