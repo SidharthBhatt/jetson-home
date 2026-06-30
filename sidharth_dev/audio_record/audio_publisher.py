@@ -29,9 +29,9 @@ python3 audio_publisher.py
 DURATION = 10
 SAMPLE_RATE = 16000
 
-class AudioTranscribedPublisher(Node):
+class MicrophonePublisher(Node):
     def __init__(self):
-        super().__init__('audio_transcribed_publisher')
+        super().__init__('microphone_publisher')
         self.pub = self.create_publisher(String, '/audio/transcribed', 10)  #this 10 at the end is some garbage QOS nonsense u can ignore 
         #self.model = whisper.load_model("medium")
         timer_period = 10
@@ -88,7 +88,7 @@ class AudioTranscribedPublisher(Node):
 
 def main():
     rclpy.init()
-    node = AudioTranscribedPublisher()
+    node = MicrophonePublisher()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
