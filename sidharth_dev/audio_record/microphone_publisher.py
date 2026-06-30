@@ -86,7 +86,7 @@ class MicrophonePublisher(Node):
         self.txt_pub.publish(msg_txt)
     def artificial_callback(self):
         # mic is broken so we will use this for now 
-        audio = subprocess.run([ffmpeg -v quiet -i "<output2026-06-25 06:13:10.663178.mp3>" -f s16le -ac 1 -ar 16000 pipe:1], capture_output=True)
+        audio = subprocess.run(["ffmpeg", "-v", "quiet", "-i", "/home/jetson/sidharth_dev/audio_record/output2026-06-25 06:13:10.663178.mp3", "-f", "s16le", "-ac", "1", "-ar", "16000", "pipe:1"], capture_output=True)
         audio = np.frombuffer(audio.stdout, dtype=np.int16).astype(np.float32) / 32768.0
         msg_audio = AudioData()
         msg_audio.data = audio.tolist()
