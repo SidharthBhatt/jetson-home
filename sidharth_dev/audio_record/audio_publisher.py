@@ -13,8 +13,11 @@ import numpy as np
 
 
 
-# How to use
-#
+# Laptop Terminal 
+'''
+cd ~/sidharth_dev/audio_record
+python3 audio_publisher.py
+'''
 # every 10 seconds, it records audio then transcribes and publishes it to /audio/transcribed
 
 '''
