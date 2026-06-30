@@ -3,7 +3,10 @@ List all the connected devices and their names which are easy to identify. E.g O
 Call all the specific check_* methods as we wrote in check_camera.py, check_audio.py, check_lidar.py, check_motors.py,
 Print the results in a table.
 
+checkall -> bash command to run this script
+
 DO NOT TOUCH
+
 '''
 
 # check_all_sensors.py - the single preflight that ties the four per-device
