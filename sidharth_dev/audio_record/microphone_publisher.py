@@ -55,6 +55,7 @@ class MicrophonePublisher(Node):
         #     self.get_logger().warn('no audio')
         #     return
         audio = whisper.pad_or_trim(audio)
+        self.raw_pub.publish(audio)
        
 
         # make log-Mel spectrogram and move to the same device as the model
@@ -78,14 +79,14 @@ class MicrophonePublisher(Node):
         if result.compression_ratio > 2.4:
             self.get_logger().warn('repeated hallucinations')
             return
-        msg = String()
-        msg.data = result.text
-        self.pub.publish(msg)
+        msg_txt = String()
+        msg_txt.data = result.text
+        self.txt_pub.publish(msg_txt)
     def artificial_callback(self):
         # mic is broken so we will use this for now 
-        msg = String()
-        msg.data = "This is an artificial callback message [insert audio here]"
-        self.pub.publish(msg)
+        msg_txt = String()
+        msg_txt.data = "This is an artificial callback message [insert audio here]"
+        self.txt_pub.publish(msg_txt)
 
 
 def main():
