@@ -75,6 +75,10 @@ class AudioPublisher(Node):
         msg = String()
         msg.data = result.text
         self.pub.publish(msg)
+    def artificial_callback(self):
+        msg = String()
+        msg.data = "This is an artificial callback message [insert audio here]"
+        self.pub.publish(msg)
 
 
 def main():
