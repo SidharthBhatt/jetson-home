@@ -158,12 +158,12 @@ def main():
     # Demo sequence
 
     print("Demo 1: forward")
-    robot.move_backward(forward_distance*5, forward_speed)
+    robot.move_backward(forward_distance, forward_speed)
     time.sleep(wait_between_demos)
 
     print("Demo 2: backward")
-    #robot.move_backward(backward_distance, backward_speed)
-    #time.sleep(wait_between_demos)
+    robot.move_backward(backward_distance, backward_speed)
+    time.sleep(wait_between_demos)
 
     print("Demo 3: forward curve left")
     #robot.curve_left(left_curve_speed, left_turn_rate, left_curve_duration)
