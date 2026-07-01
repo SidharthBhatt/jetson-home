@@ -2,6 +2,16 @@ import rclpy
 from rclpy.node import Node
 
 
+'''
+Termial 1: run robot bringup
+
+source /opt/ros/humble/setup.bash
+source ~/yahboomcar_ros2_ws/yahboomcar_ws/install/setup.bash
+ros2 launch ydlidar_ros2_driver ydlidar_launch.py
+
+
+
+'''
 
 class MinimalPublisher(Node):
 
