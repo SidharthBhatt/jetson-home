@@ -11,3 +11,5 @@ Create a sensor recording and replay pipeline
 source /opt/ros/humble/setup.bash
 export DISPLAY=:0
 ros2 run rviz2 rviz2
+
+just doing this so i can commit 
